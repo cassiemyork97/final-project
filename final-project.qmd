@@ -1,0 +1,33 @@
+---
+title: "Final Project"
+author: "Cassie York"
+format: html
+editor: visual
+---
+
+## Quarto
+
+```{r}
+library(tidyverse)
+library(gtsummary)
+
+park_visits <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-09-17/national_parks.csv")
+```
+
+```{r}
+tbl_summary(
+  park_visits,
+  by = year,
+  include = c(parkname, region, state, visitors, year),
+  label = list(
+    parkname ~ "Park Name",
+    region ~ "Region",
+    state ~ "State",
+    visitors ~ "Number of Visitors",
+    year ~ "Year")) %>% 
+  add_overall(col_label = "**Total**") %>% 
+  bold_labels() %>% 
+  modify_footnote(update = everything() ~ NA)
+ # modify_header(label = "**Variable**")
+```
+
