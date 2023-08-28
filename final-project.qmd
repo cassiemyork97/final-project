@@ -63,9 +63,17 @@ tbl_regression(
 ```
 
 ```{r}
-covid %>%
+barplot <- covid %>%
 	ggplot(aes(x = result, fill = gender)) +
 	geom_bar(position = "dodge") +
-	labs(x = "Test Result", y = "Count")
+	labs(x = "Test Result", y = "Count") +
+	scale_fill_discrete(name = "Gender")
+
+ggsave(plot = barplot,
+			 filename = here::here("figures/barplot.pdf"))
+```
+
+```{r}
+
 ```
 
