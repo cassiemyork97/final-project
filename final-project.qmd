@@ -29,7 +29,8 @@ covid <- medicaldata::covid_testing %>%
 ```{r}
 #| echo: false
 #| warning: false
-#| tbl-one: "Descriptive Statistics"
+#| label: tbl-one
+#| tbl-cap: "Descriptive Statistics"
 
 tbl_summary(
   covid,
@@ -50,28 +51,32 @@ tbl_summary(
 
 ```{r}
 #| echo: false
-#| tbl-two: "Regression Results"
+#| label: tbl-two
+#| tbl-cap: "Logistic Regression Results"
 
 tbl_uvregression(
-	covid,
-	y = age,
-	include = c(age, demo_group, result, drive_thru_ind, pan_day, col_rec_tat),
-	label = list(
+  covid, 
+  y = result,
+  include = c(age, demo_group, result, drive_thru_ind, pan_day, col_rec_tat),
+  label = list(
   	age ~ "Age (Years)",
   	demo_group ~ "Type of Subject",
   	result ~ "COVID Test Result",
   	drive_thru_ind ~ "Specimen Collected via Drive-Thru Site",
   	pan_day ~ "Day After Start of Pandemic in Which Specimen Was Collected (Days)",
   	col_rec_tat ~ "Time Elapsed Between Collect Time and Receive Time (Hours)"),
-	method = lm) %>%
-  bold_labels() %>% 
+  method = glm,
+  method.args = list(family = binomial()),
+  exponentiate = TRUE) %>%
+	bold_labels() %>% 
   modify_footnote(update = everything() ~ NA)
 ```
 
 ```{r}
 #| echo: false
 #| message: false
-#| fig-one: "Test Result Count by Gender"
+#| label: fig-one
+#| fig-cap: "Test Result Count by Gender"
 
 barplot <- covid %>%
 	ggplot(aes(x = result, fill = gender)) +
