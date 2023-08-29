@@ -11,7 +11,6 @@ This data set contains data from PCR testing for COVID-19 during 2020 at the Chi
 
 ```{r}
 #| echo: false
-#| include: false
 #| warning: false
 
 remotes::install_github("higgi13425/medicaldata")
@@ -24,6 +23,26 @@ covid <- medicaldata::covid_testing %>%
 				 demo_group = factor(demo_group, labels = c("Client", "Misc Adult", "Other Adult", "Patient", "Unidentified")),
 				 gender = factor(gender, labels = c("Female", "Male")))
 
+```
+
+```{r}
+#| echo: false
+
+sd <- function(x) {
+  # Find the mean
+  mean <- mean(x)
+
+  # Calculate the squared deviations from the mean
+  squared_deviations <- (x - mean)^2
+
+  # Sum the squared deviations
+  sum_of_squared_deviations <- sum(squared_deviations)
+
+  # Calculate the standard deviation
+  sd <- sqrt(sum_of_squared_deviations / (length(x) - 1))
+
+  return(sd)
+}
 ```
 
 ```{r}
@@ -53,6 +72,7 @@ tbl_summary(
 #| echo: false
 #| label: tbl-two
 #| tbl-cap: "Logistic Regression Results"
+#| warning: false
 
 tbl_uvregression(
   covid, 
@@ -68,8 +88,8 @@ tbl_uvregression(
   method = glm,
   method.args = list(family = binomial()),
   exponentiate = TRUE) %>%
-	bold_labels() %>% 
-  modify_footnote(update = everything() ~ NA)
+	bold_labels() %>%
+	modify_footnote(update = everything() ~ NA)
 ```
 
 ```{r}
@@ -90,9 +110,5 @@ ggsave(plot = barplot,
 			 filename = here::here("figures/barplot.pdf"))
 ```
 
-```{r}
-#| echo: false
 
-
-```
 
