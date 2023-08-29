@@ -1,13 +1,19 @@
 ---
-title: "Final Project"
+title: "EPI 590R Final Project"
 author: "Cassie York"
 format: html
 editor: visual
 ---
 
-## Quarto
+## Background
+
+This data set contains data from PCR testing for COVID-19 during 2020 at the Children's Hospital of Pennsylvania. Amrom E. Obstfeld deidentified this data set through anonymizition, time-shifting, and permution.
 
 ```{r}
+#| echo: false
+#| include: false
+#| warning: false
+
 remotes::install_github("higgi13425/medicaldata")
 library(tidyverse)
 library(gtsummary)
@@ -21,6 +27,10 @@ covid <- medicaldata::covid_testing %>%
 ```
 
 ```{r}
+#| echo: false
+#| warning: false
+#| tbl-one: "Descriptive Statistics"
+
 tbl_summary(
   covid,
   by = gender,
@@ -32,48 +42,52 @@ tbl_summary(
   	drive_thru_ind ~ "Specimen Collected via Drive-Thru Site",
   	pan_day ~ "Day After Start of Pandemic in Which Specimen Was Collected (Days)",
   	col_rec_tat ~ "Time Elapsed Between Collect Time and Receive Time (Hours)")) %>%
-  add_p(test = list(all_continuous() ~ "t.test", 
-                    all_categorical() ~ "chisq.test")) %>% 
   add_overall() %>% 
   bold_labels() %>% 
   modify_footnote(update = everything() ~ NA) %>% 
-  modify_header(label = "**Variable**", p.value = "**P**")
+  modify_header(label = "**Variable**")
 ```
 
 ```{r}
+#| echo: false
+#| tbl-two: "Regression Results"
+
 tbl_uvregression(
 	covid,
 	y = age,
 	include = c(age, demo_group, result, drive_thru_ind, pan_day, col_rec_tat),
-	method = lm)
-
-linear_model <- covid %>%
-	lm(gender ~ age + demo_group + result)
-
-tbl_regression(
-	linear_model,
-	intercept = TRUE,
 	label = list(
   	age ~ "Age (Years)",
   	demo_group ~ "Type of Subject",
   	result ~ "COVID Test Result",
   	drive_thru_ind ~ "Specimen Collected via Drive-Thru Site",
   	pan_day ~ "Day After Start of Pandemic in Which Specimen Was Collected (Days)",
-  	col_rec_tat ~ "Time Elapsed Between Collect Time and Receive Time (Hours)"))
+  	col_rec_tat ~ "Time Elapsed Between Collect Time and Receive Time (Hours)"),
+	method = lm) %>%
+  bold_labels() %>% 
+  modify_footnote(update = everything() ~ NA)
 ```
 
 ```{r}
+#| echo: false
+#| message: false
+#| fig-one: "Test Result Count by Gender"
+
 barplot <- covid %>%
 	ggplot(aes(x = result, fill = gender)) +
 	geom_bar(position = "dodge") +
 	labs(x = "Test Result", y = "Count") +
 	scale_fill_discrete(name = "Gender")
 
+print(barplot)
+
 ggsave(plot = barplot,
 			 filename = here::here("figures/barplot.pdf"))
 ```
 
 ```{r}
+#| echo: false
+
 
 ```
 
