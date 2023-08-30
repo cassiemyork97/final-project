@@ -1,1 +1,3 @@
-Run .R and then render document.qmd
+The code book for the COVID data can be found here: https://htmlpreview.github.io/?https://github.com/higgi13425/medicaldata/blob/master/man/codebooks/covid_testing_codebook.html
+The data can be found here (covid_testing): https://higgi13425.github.io/medicaldata/#list-of-datasets
+Render final-project.qmd
