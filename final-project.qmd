@@ -9,6 +9,8 @@ editor: visual
 
 This data set contains data from PCR testing for COVID-19 during 2020 at the Children's Hospital of Pennsylvania. Amrom E. Obstfeld deidentified this data set through anonymizition, time-shifting, and permution.
 
+## Results
+
 ```{r}
 #| echo: false
 #| warning: false
@@ -51,21 +53,24 @@ sd <- function(x) {
 #| label: tbl-one
 #| tbl-cap: "Descriptive Statistics"
 
-tbl_summary(
+tbl_one <- tbl_summary(
   covid,
   by = gender,
-  include = c(age, demo_group, result, drive_thru_ind, pan_day, col_rec_tat),
+  include = c(age, demo_group, result, drive_thru_ind, pan_day),
   label = list(
   	age ~ "Age (Years)",
   	demo_group ~ "Type of Subject",
   	result ~ "COVID Test Result",
   	drive_thru_ind ~ "Specimen Collected via Drive-Thru Site",
-  	pan_day ~ "Day After Start of Pandemic in Which Specimen Was Collected (Days)",
-  	col_rec_tat ~ "Time Elapsed Between Collect Time and Receive Time (Hours)")) %>%
+  	pan_day ~ "Day After Start of Pandemic in Which Specimen Was Collected (Days)"),
+  statistic = list(age ~ "{mean} ({sd})", pan_day ~ "{mean} ({sd})"),
+  digits = list(age ~ c(2,2), pan_day ~ c(2,2))) %>%
   add_overall() %>% 
   bold_labels() %>% 
   modify_footnote(update = everything() ~ NA) %>% 
   modify_header(label = "**Variable**")
+
+tbl_one
 ```
 
 ```{r}
@@ -110,5 +115,10 @@ ggsave(plot = barplot,
 			 filename = here::here("figures/barplot.pdf"))
 ```
 
+## Discussion
 
+In @tbl-one, we can see that over half of all COVID tests were collected via a drive-thru site.
+Females and males had similar positive test result rates (Females = `r inline_text(tbl_one, variable = "result", column = "Female", level = "Positive")` and Males = `r inline_text(tbl_one, variable = "result", column = "Female", level = "Positive")`.
+
+In @fig-one, we can see that most of the test results were negative.
 
